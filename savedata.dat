@@ -1,0 +1,14 @@
+(igame.save
+GameData
+p0
+(dp1
+S'coins'
+p2
+I0
+sS'life'
+p3
+I3
+sS'levelidx'
+p4
+I0
+sb.
