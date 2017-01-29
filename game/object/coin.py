@@ -12,7 +12,7 @@ class YellowCoin(Drawable):
         Drawable.__init__(self, image, x, y, 16, 16, 4, 0, 0)
         self.value = 1
 
-    def action(self, level):
+    def action(self, level, ticks):
         level.playsound('yellowcoin')
         level.mario.coins += self.value
         level.objects.remove(self)
@@ -24,7 +24,7 @@ class GreenCoin(Drawable):
         Drawable.__init__(self, image, x, y, 16, 16, 4, 0, 16)
         self.value = 3
 
-    def action(self, level):
+    def action(self, level, ticks):
         level.playsound('yellowcoin')
         level.mario.coins += self.value
         level.objects.remove(self)
@@ -36,7 +36,7 @@ class RedCoin(Drawable):
         Drawable.__init__(self, image, x, y, 16, 16, 4, 0, 32)
         self.value = 3
 
-    def action(self, level):
+    def action(self, level, ticks):
         level.playsound('yellowcoin')
         level.mario.coins += self.value
         level.objects.remove(self)
@@ -45,10 +45,10 @@ class RedCoin(Drawable):
 
 class YoshiCoin(Drawable):
     def __init__(self, image, x, y):
-        Drawable.__init__(self, image, x, y, 16, 25, 5, 0, 216)
+        Drawable.__init__(self, image, x, y, 16, 25, 5, 0, 215)
         self.value = 1
 
-    def action(self, level):
+    def action(self, level, ticks):
         level.playsound('dragoncoin')
         level.mario.yoshicoins += self.value
         level.objects.remove(self)
@@ -56,8 +56,8 @@ class YoshiCoin(Drawable):
 
 
 class YellowRingCoin(Drawable):
-    def __init__(self, image, x, y, w, h, nbcoins, radius, direction, nbframes):
-        Drawable.__init__(self, image, x, y, w, h, nbframes, 0, 32)
+    def __init__(self, image, x, y, nbcoins, radius, direction):
+        Drawable.__init__(self, image, x, y, 16, 16, 4, 0, 32)
         self.coins = []
         self.position = Rect(x, y, radius*2, radius*2)
         self.angle = 0.0
@@ -91,7 +91,7 @@ class YellowRingCoin(Drawable):
             if coin.active is True:
                 coin.draw(game)
 
-    def action(self, level):
+    def action(self, level, ticks):
         for i in (range(len(self.coins))):
             coin = self.coins[i]
             if coin is not None and level.mario.position.colliderect(coin.position):
@@ -132,7 +132,7 @@ class BlockCoin(Drawable):
         else:
             self.frame = 4
 
-    def action(self, level):
+    def action(self, level, ticks):
         Xcenter = level.mario.position.left + level.mario.position.width/2
         if self.position.left <= Xcenter <= self.position.right:
             if self.coins > 0:
@@ -142,10 +142,5 @@ class BlockCoin(Drawable):
                 self.coins -= 1
                 obj = CoinAdded(self.image, self.position.left, self.position.top-16)
                 level.objects.append(obj)
-
-
-
-
-
-
-
+            else:
+                level.playsound('block')

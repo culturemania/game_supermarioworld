@@ -9,7 +9,7 @@ from game.tools import Vector2
 
 class Mario(Character):
     def __init__(self, image, x, y, w, h, nbframes):
-        Character.__init__(self, image, x, y, w, h, nbframes, 0, 59)
+        Character.__init__(self, image, x, y, w, h, nbframes, 0, 0)
 
         self.speed = 2
         self.originalspeed = 2
@@ -20,7 +20,7 @@ class Mario(Character):
         self.coins = 0
         self.yoshicoins = 0
         self.life = 5
-        self.energy = 3
+        self.energy = 10
         self.score = 0
         self.ishurt = False
         self.lasthurttime = pygame.time.get_ticks()
@@ -130,7 +130,7 @@ class Mario(Character):
     def checkcollision(self, level, ticks):
         for bonus in reversed(level.bonuses):
             if self.position.colliderect(bonus.position):
-                res = bonus.action(level)
+                res = bonus.action(level, ticks)
                 if res == Message.TERMINATELEVEL:
                     return res
 
@@ -151,22 +151,27 @@ class Mario(Character):
                     # on descend et est au dessus
                     print "Die ! "
                     nbkills += 1
-                    ennemy.action(level)
+                    ennemy.die(level)
                 elif self.ishurt is False and self.position.colliderect(rectcol):
-                    print "Ouch !"
-                    level.playsound('cough')
-                    if self.isbig:
-                        self.setBig(False)
-                    else:
-                        self.energy -= 1
-                    self.ishurt = True
-                    self.lasthurttime = ticks
-                    if self.energy <= 0:
-                        level.reset()
+                    print "Mario Hurt ! "
+                    ennemy.action(level, ticks)
                     break
         if nbkills > 0:
             self.jump(jvalue, ticks)
         return True
+
+    def hurt(self, level, strength, ticks):
+        print "Ouch !"
+        self.ishurt = True
+        level.playsound('cough')
+        if self.isbig:
+            self.setBig(False)
+        else:
+            self.energy -= strength
+
+        self.lasthurttime = ticks
+        if self.energy <= 0:
+            level.reset()
 
     def setBig(self, big=True):
         if big is True:

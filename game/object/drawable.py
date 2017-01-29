@@ -12,7 +12,7 @@ class Object(pygame.sprite.Sprite):
     def inscreen(self, level):
         return level.camera.rect.colliderect(self.position)
 
-    def action(self, level):
+    def action(self, level, ticks):
         pass
 
     def draw(self, level):
@@ -51,14 +51,13 @@ class Drawable(Object):
             else:
                 self.frame += 1
 
-    def action(self, game):
-        Object.action(self, game)
-        game.mario.coins += self.value
-        game.objects.remove(self)
-        game.bonuses.remove(self)
+    def action(self, level, ticks):
+        Object.action(self, level)
+        level.mario.coins += self.value
+        level.objects.remove(self)
+        level.bonuses.remove(self)
 
     def draw(self, level):
-
         self.surface.blit(self.image, (0, 0), (self.frame*self.position.width + self.blitx, self.blity, self.position.width, self.position.height))
         xcam = level.camera.rect.left
         ycam = level.camera.rect.top

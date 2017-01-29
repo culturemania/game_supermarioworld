@@ -1,7 +1,7 @@
 __author__ = 'ESTEBAN'
 
 from drawable import Drawable
-
+import random
 from game.tools import Message
 import pygame
 
@@ -15,17 +15,20 @@ class Asset(Drawable):
 class Text(Drawable):
     def __init__(self, image, x, y, value):
         Drawable.__init__(self, image, x, y, 36, 28, 1, 0, 511)
-        self.screenfont = pygame.font.SysFont("Quartz MS", 18, True)
+        self.screenfont = pygame.font.SysFont("Segoe Print", 18, True)
         self.value = value
 
     def draw(self, level):
+        xcam = level.camera.rect.left
+        ycam = level.camera.rect.top
         screen = pygame.display.get_surface()
         label = self.screenfont.render(self.value, 1, (255, 255, 255))
-        screen.blit(label, self.position)
+        screen.blit(label, self.position.move(-xcam, -ycam))
 
     def update(self, level):
         ticks = pygame.time.get_ticks()
         if ticks - self.lastupdateframe > 2000:
+            print "removed"
             level.topobjects.remove(self)
 
 
@@ -44,15 +47,16 @@ class LevelEndBar(Drawable):
 
         self.position.y += self.direction*self.speed
 
-    def action(self, level):
+    def action(self, level, ticks):
         range = self.range[1] - self.range[0]
         delta = min(range, abs(self.position.y - self.range[0]))
-        score = range - delta
-        print "TOUCHE ! {} / {}".format(score, range)
-        print "SCORE ! {} ".format(score*100/range)
-        text = Text(level.imageSprites, self.position.left, self.range[0] - 50, "{} !".format(score*100/range))
+        scoring = (range - delta)*100/range
+        text = Text(level.imageSprites, self.position.left, self.range[0] - 50, "{} !".format(scoring))
         level.toptopobjects.append(text)
-        level.playsound('level-complete')
+        if scoring < 50:
+            level.playsound('level-complete-low')
+        if scoring >= 90:
+            level.playsound('level-complete')
         return Message.TERMINATELEVEL
 
 
@@ -109,3 +113,38 @@ class CoinAdded(Drawable):
             self.position.top -= 5
             if self.position.top < self.yorigin-50:
                 level.objects.remove(self)
+
+
+class Cloud(Drawable):
+    def __init__(self, assetfile, x, y, speed):
+        Drawable.__init__(self, assetfile, x, y, 134, 66, 1, 0, 665)
+        self.lastupdate = pygame.time.get_ticks()
+        self.speed = -speed
+        self.opacity = random.randint(50, 220)
+
+    def update(self, level):
+        ticks = pygame.time.get_ticks()
+        if ticks - self.lastupdate > 1/self.speed*100:
+            self.position = self.position.move(self.speed, 0)
+            self.lastupdate = ticks
+            if self.position.right < 0:
+                self.position.left = max(level.mario.position.right,level.camera.rect.width/2)  + level.camera.rect.width/2
+                speed = random.randint(1, 2)
+                self.position.top = random.randint(-50, 250)
+
+    def blit_alpha(self, target, source, location, opacity):
+        x = location[0]
+        y = location[1]
+        temp = pygame.Surface((source.get_width(), source.get_height())).convert()
+        temp.blit(target, (-x, -y))
+        temp.blit(source, (0, 0))
+        temp.set_alpha(opacity)
+        target.blit(temp, location)
+
+    def draw(self, level):
+        self.surface.blit(self.image, (0, 0), (self.frame*self.position.width + self.blitx, self.blity, self.position.width, self.position.height))
+        xcam = level.camera.rect.left
+        ycam = level.camera.rect.top
+        screen = pygame.display.get_surface()
+        self.blit_alpha(screen, self.surface, self.position.move(-xcam, -ycam), self.opacity)
+

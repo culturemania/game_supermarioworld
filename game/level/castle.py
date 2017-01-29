@@ -1,5 +1,8 @@
 __author__ = 'ESTEBAN'
+
 from level import Level
+import os
+from game.object import *
 
 
 class Castle(Level):
@@ -11,6 +14,18 @@ class Castle(Level):
 
     def loadcontent(self):
         Level.loadcontent(self)
+
+    def start(self, mario):
+        Level.start(self, mario)
+        musicfilepath = "game\\assets\\musics\\hautedhouse.mp3".format(self.name)
+        if os.path.exists(musicfilepath):
+            pygame.mixer.music.load(musicfilepath)
+            pygame.mixer.music.play()
+
+    def draw(self, game):
+        game.screen.fill(self.bgcolor)
+        self.fond.draw(self)
+        Level.draw(self, game)
 
 
 class Castle01(Castle):

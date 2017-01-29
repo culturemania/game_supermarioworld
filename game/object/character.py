@@ -12,6 +12,7 @@ class Character(Drawable):
         Drawable.__init__(self, image, x, y, w, h, nbframes, blitx, blity)
         self.speed = 1
         self.originalspeed = 1
+        self.strength = 1
         self.upspeed = 0
         self.gravity = 6
         self.speedy = 0
@@ -96,7 +97,7 @@ class Character(Drawable):
 
         x = self.position.left + self.position.width/2
         plateforms = filter(lambda p: abs((p.rect.left+p.rect.width/2) - self.position.left) < (p.rect.width + self.position.width)
-        and abs((p.rect.top+p.rect.height/2) - self.position.top) < (p.rect.height + self.position.height) , level.platforms)
+         and abs((p.rect.top+p.rect.height/2) - self.position.top) < (p.rect.height + self.position.height) , level.platforms)
 
         for g in range(-self.gravity - self.speed-1, 0):
             y = self.position.bottom + g
@@ -140,13 +141,15 @@ class Character(Drawable):
                             self.speed = self.originalspeed
                             return
 
-    def action(self, level):
+    def die(self, level):
         level.mario.score += self.score
         self.life -= level.mario.power
         if self.life <= 0:
             self.isdying = True
             level.playsound('turtle')
             self.frame = self.nbframes*2
-            #obj = Tumb(level.imageSprites, self.position.left, self.position.bottom-48, 23, 48, 9)
             obj = Impact(level.imageSprites, self.position.left+self.position.width/2, self.position.top)
             level.objects.insert(0, obj)
+
+    def action(self, level, ticks):
+        level.mario.hurt(level, self.strength, ticks)

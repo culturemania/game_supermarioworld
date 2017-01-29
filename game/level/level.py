@@ -7,7 +7,6 @@ from game.camera import Camera
 from game.object import *
 from datetime import datetime
 from game.factory import Factory
-import os
 import csv
 
 FPS = 60
@@ -98,8 +97,8 @@ class Level:
         self.surfacetile.set_colorkey(Color(255, 0, 255, 255), RLEACCEL)
 
     def reset(self):
-        self.mario.position.x = 0
-        self.mario.position.y = 0
+        self.mario.position.x = 32
+        self.mario.position.y = 300
         self.mario.energy = 5
         self.camera.rect.x = 0
         self.camera.rect.y = 0
@@ -123,18 +122,15 @@ class Level:
         self.unloadcontent()
 
     def start(self, mario):
+        print "start"
         self.mario = mario
-        self.mario.position.left = 0
-        self.mario.position.top = 0
+        self.mario.position.left = 32
+        self.mario.position.top = 300
         self.initmap()
         self.loadimage()
         self.loadcontent()
         self.starttime = datetime.utcnow()
         self.running = True
-        musicfilepath = "game\\assets\\musics\\{}.mp3".format(self.name)
-        if os.path.exists(musicfilepath):
-            pygame.mixer.music.load(musicfilepath)
-            pygame.mixer.music.play()
 
     def loadcontent(self):
         print "Load"
@@ -144,7 +140,10 @@ class Level:
         self.sounds['turtle'] = pygame.mixer.Sound("game\\assets\\sounds\\smw_stomp.wav")
         self.sounds['mariojump'] = pygame.mixer.Sound("game\\assets\\sounds\\smw_jump.wav")
         self.sounds['cough'] = pygame.mixer.Sound("game\\assets\\sounds\\cough.wav")
+        self.sounds['block'] = pygame.mixer.Sound("game\\assets\\sounds\\smw_block.wav")
+        self.sounds['mushroom'] = pygame.mixer.Sound("game\\assets\\sounds\\smw_mushroom.wav")
         self.sounds['level-complete'] = pygame.mixer.Sound("game\\assets\\sounds\\level-complete.wav")
+        self.sounds['level-complete-low'] = pygame.mixer.Sound("game\\assets\\sounds\\level-complete-low.wav")
 
     def loadtilemap(self):
         f = Factory()
@@ -177,12 +176,11 @@ class Level:
                     self.bonuses.append(obj)
                     self.blocks.append(obj.position)
 
-
     def update(self):
         ticks = pygame.time.get_ticks()
         if self.levelState == LevelState.TERMINATING:
             self.mario.frame = 10
-            self.opacityend = min (255, self.opacityend + 6)
+            self.opacityend = min(255, self.opacityend + 6)
             pygame.mixer.music.stop()
             if (ticks - self.timeevent) > 2000:
                 return Message.TERMINATELEVEL
@@ -219,7 +217,6 @@ class Level:
         for obj in self.toptopobjects:
             if obj.isalive:
                 obj.update(self)
-
 
         res = self.mario.update(self)
         if res is Message.TERMINATELEVEL:
@@ -272,7 +269,7 @@ class Level:
                 screen.blit(rect, (0, 0))
                 self.mario.draw(self)
                 for obj in self.toptopobjects:
-                    if obj.inscreen(self):
-                        obj.draw(self)
+                    print type(obj)
+                    obj.draw(self)
 
             pygame.display.flip()

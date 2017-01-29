@@ -5,7 +5,6 @@ from coin import YellowCoin, RedCoin, GreenCoin, BlockCoin, YellowRingCoin, Yosh
 from mushroom import Mushroom
 from mario import Mario
 from asset import *
-from cloud import Cloud
 from character import Character
 from ennemies import *
 from state import State

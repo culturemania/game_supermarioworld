@@ -13,14 +13,14 @@ class Save:
     def __init__(self):
         pass
 
-    def save(self, data):
-        with open("savedata.dat", "wb") as file:
+    def save(self, data, slot):
+        with open("savedata{}.dat".format(slot), "wb") as file:
             pickle.dump(data, file)
 
-    def load(self):
+    def load(self, slot):
         data = None
         try:
-            with open("savedata.dat", "rb") as file:
+            with open("savedata{}.dat".format(slot), "rb") as file:
                 data = pickle.load(file)
         except Exception as err:
             print err.message

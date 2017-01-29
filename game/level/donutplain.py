@@ -1,24 +1,10 @@
 __author__ = 'ESTEBAN'
 
 from level import Level
-import random
 from game.object import *
 from game.tools import Vector2
 from level import TILESIZE
-
-
-class DebugLevel(Level):
-    def __init__(self, game, name):
-        Level.__init__(self, game, name)
-        self.speed = 1
-
-    def loadcontent(self):
-        Level.loadcontent(self)
-
-        for i in range(0, 10):
-            obj = Goomba(self.imageSprites, 300 + i*50, 200)
-            self.objects.append(obj)
-            self.ennemies.append(obj)
+import os
 
 
 class DonutPlain(Level):
@@ -31,11 +17,16 @@ class DonutPlain(Level):
         Level.loadcontent(self)
         self.imageBG = pygame.image.load("game\\assets\\sprites\\backgroundhd.bmp").convert_alpha()
         self.fond = Background(self.imageBG, 0, 0, 0, 0, 874, 363, 1, 2)
-        #self.fond2 = Background(self.imageBG, 0, 250, 0, 133, 256, 120, 1, 3)
+
+    def start(self, mario):
+        Level.start(self, mario)
+        musicfilepath = "game\\assets\\musics\\donutplain.mp3".format(self.name)
+        if os.path.exists(musicfilepath):
+            pygame.mixer.music.load(musicfilepath)
+            pygame.mixer.music.play()
 
     def draw(self, game):
         game.screen.fill(self.bgcolor)
-        #self.fond2.draw(self)
         self.fond.draw(self)
         Level.draw(self, game)
 
@@ -53,13 +44,17 @@ class DonutPlain00(DonutPlain):
         self.objects.append(obj)
         self.bonuses.append(obj)
 
-        obj = YellowRingCoin(self.imageSprites, 200, 200, 16, 16, 10, 50, Vector2(-1, 0), 4)
+        obj = YellowRingCoin(self.imageSprites, 600, 150, 10, 50, Vector2(-1, 0))
         self.objects.append(obj)
         self.bonuses.append(obj)
 
-        obj = Ghost(self.imageSprites, 1800, 100)
+        obj = YellowRingCoin(self.imageSprites, 550, 100, 20, 100, Vector2(1, 0))
         self.objects.append(obj)
-        self.ennemies.append(obj)
+        self.bonuses.append(obj)
+
+        obj = YellowRingCoin(self.imageSprites, 500, 50, 30, 150, Vector2(-1, 0))
+        self.objects.append(obj)
+        self.bonuses.append(obj)
 
         for i in range(0, 5):
             x = random.randint(0, 1000)
@@ -87,16 +82,16 @@ class DonutPlain01(DonutPlain):
         self.objects.append(obj)
         self.bonuses.append(obj)
 
-        obj = YellowRingCoin(self.imageSprites, 480, 200, 16, 16, 16, 50, Vector2(1, 0), 4)
+        obj = YellowRingCoin(self.imageSprites, 480, 200, 16, 50, Vector2(1, 0))
         self.objects.append(obj)
         self.bonuses.append(obj)
 
-        obj = YellowRingCoin(self.imageSprites, 430, 150, 16, 16, 32, 100, Vector2(-1, 0), 4)
+        obj = YellowRingCoin(self.imageSprites, 430, 150, 32, 100, Vector2(-1, 0))
         self.objects.append(obj)
         self.bonuses.append(obj)
 
         for i in range(0, 3):
-            obj = BlockCoin(self.imageSprites, 160 + i*16, 316, 16, 16, 4)
+            obj = BlockCoin(self.imageSprites, 160 + i*16, 316)
             self.objects.append(obj)
             self.bonuses.append(obj)
             self.objects.append(obj)

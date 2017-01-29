@@ -14,8 +14,8 @@ class Mushroom(Character):
     def update(self, game):
         Character.update(self, game)
 
-    def action(self, level):
+    def action(self, level, ticks):
+        level.playsound('mushroom')
         level.mario.setBig(True)
-
         level.objects.remove(self)
         level.bonuses.remove(self)
