@@ -2,7 +2,7 @@ __author__ = 'ESTEBAN'
 
 from level import Level
 import os
-from game.object import *
+from game.object.ennemy import *
 
 
 class Castle(Level):

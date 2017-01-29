@@ -2,6 +2,7 @@ __author__ = 'ESTEBAN'
 
 from level import Level
 from game.object import *
+from game.object.ennemy import *
 from game.tools import Vector2
 from level import TILESIZE
 import os

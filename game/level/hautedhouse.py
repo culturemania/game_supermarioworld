@@ -3,6 +3,7 @@ __author__ = 'ESTEBAN'
 from level import Level
 import os
 from game.object import *
+from game.object.ennemy import *
 from game.tools import Vector2
 import random
 

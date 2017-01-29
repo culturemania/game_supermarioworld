@@ -1,82 +1,10 @@
-__author__ = 'ESTEBAN'
-
-from character import Character
-from drawable import Drawable
+__author__ = 'Vincent'
+from game.object.character import Character
+from game.object.drawable import Drawable
 from pygame.locals import *
 import pygame
 import random
 import math
-
-
-class Taupe(Character):
-    def __init__(self, image, x, y, w, h, nbframes):
-        Character.__init__(self, image, x, y, w, h, nbframes, 0, 92)
-        self.speed = 1
-        self.score = 1000
-
-    def update(self, game):
-        #if math.fabs(game.mario.position.x - self.position.x) < 100:
-        #    self.speed = 2
-        #else:
-        #    self.speed = 1
-        Character.update(self, game)
-
-
-class Goomba(Character):
-    def __init__(self, image, x, y):
-        Character.__init__(self, image, x, y, 16, 16, 2, 0, 576)
-        self.speed = 1
-        self.score = 200
-        self.iswalking = True
-
-    def update(self, game):
-        ticks = pygame.time.get_ticks()
-        if ticks - self.lastupdatejump > self.randomevent:
-            self.randomevent = random.randint(100, 3000)
-            self.lastupdatejump = ticks
-            if self.iswalking:
-                self.frame = 5
-            elif self.direction.x > 0:
-                self.frame = 2
-            else:
-                self.frame = 0
-            self.iswalking = not self.iswalking
-
-        if self.iswalking or self.isdying:
-            Character.update(self, game)
-
-
-class Tortoise(Character):
-    def __init__(self, image, x, y):
-        Character.__init__(self, image, x, y, 16, 28, 2, 0, 64)
-        self.speed = 1
-        self.score = 200
-
-
-class TortoiseJumpy(Character):
-    def __init__(self, image, x, y):
-        Character.__init__(self, image, x, y, 17, 28, 2, 0, 188)
-        self.speed = 1
-        self.score = 300
-
-    def update(self, game):
-        Character.update(self, game)
-        ticks = pygame.time.get_ticks()
-        if (ticks - self.lastupdatejump) > self.randomevent:
-            self.lastupdateframe = ticks
-            self.randomevent = random.randint(1000, 5000)
-            if self.direction.y == 0:
-                self.jump(-12, ticks)
-
-
-class Dragon(Character):
-    def __init__(self, image, x, y):
-        Character.__init__(self, image, x, y, 20, 32, 2, 0, 600)
-        self.speed = 1
-        self.score = 2000
-
-    def update(self, level):
-        Character.update(self, level)
 
 
 class Ghost(Character):

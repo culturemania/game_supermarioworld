@@ -1,4 +1,5 @@
 __author__ = 'ESTEBAN'
+from object.ennemy import *
 from object import *
 
 

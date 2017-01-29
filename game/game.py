@@ -71,6 +71,8 @@ class Game:
         self.levels.append(DonutPlain00(self, "donutplain00"))
         self.levels.append(HauntedHouse01(self, "hauntedhouse01"))
 
+
+
         self.levels.append(DonutPlain00(self, "donutplain02"))
         self.levels.append(Castle01(self, "castle01"))
 
